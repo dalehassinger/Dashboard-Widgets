@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dillsburg 5-Day Forecast</title>
+    <title>Dillsburg Weather & Radar</title>
     <style>
         :root {
             --bg-color: #f0f2f5;
@@ -29,85 +29,57 @@
             border-radius: 24px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.08);
             width: 100%;
-            max-width: 650px;
+            max-width: 700px;
             overflow: hidden;
         }
 
         /* Current Weather Section */
         .current-weather {
-            padding: 2.5rem;
+            padding: 2rem;
             text-align: center;
             border-bottom: 1px solid #edf2f7;
         }
 
-        .city-header {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--text-main);
-            margin: 0;
-        }
+        .city-header { font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin: 0; }
 
         .current-main {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 20px;
-            margin: 1rem 0;
         }
 
-        .current-temp {
-            font-size: 4.5rem;
-            font-weight: 800;
-            letter-spacing: -3px;
-        }
-
-        .current-icon {
-            width: 100px;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-        }
+        .current-temp { font-size: 4rem; font-weight: 800; letter-spacing: -3px; }
+        .current-icon { width: 80px; }
 
         /* Forecast Section */
         .forecast-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            padding: 1.5rem;
+            padding: 1rem;
             background: #fafbfc;
+            border-bottom: 1px solid #edf2f7;
         }
 
-        .forecast-day {
-            text-align: center;
-            padding: 10px;
+        .forecast-day { text-align: center; padding: 5px; }
+        .forecast-date { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        .forecast-icon { width: 40px; margin: 2px 0; }
+        .forecast-temp { font-weight: 700; font-size: 1rem; color: var(--text-main); }
+
+        /* Radar Section */
+        .radar-section {
+            width: 100%;
+            height: 350px;
+            position: relative;
         }
 
-        .forecast-date {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
+        iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
         }
 
-        .forecast-icon {
-            width: 50px;
-            margin: 5px 0;
-        }
-
-        .forecast-temp {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--text-main);
-        }
-
-        .loading-text {
-            padding: 40px;
-            text-align: center;
-            color: var(--text-muted);
-            font-style: italic;
-        }
-
-        @media (max-width: 500px) {
-            .forecast-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-            .current-temp { font-size: 3rem; }
-        }
+        .loading-text { padding: 40px; text-align: center; color: var(--text-muted); font-style: italic; }
     </style>
 </head>
 <body>
@@ -115,6 +87,13 @@
     <div class="weather-container">
         <div id="weather-app">
             <p class="loading-text">Loading Dillsburg forecast...</p>
+        </div>
+
+        <div class="radar-section">
+            <iframe 
+                src="https://www.rainviewer.com/map.html?loc=40.11,-77.03,9&control=1&map=1&refl=1&mra=1&v=1&cm=1&p=1&ao=1&df=1" 
+                allowfullscreen>
+            </iframe>
         </div>
     </div>
 
@@ -125,20 +104,15 @@
 
         async function getWeather() {
             const container = document.getElementById('weather-app');
-            
             try {
-                // 1. Fetch Current Weather
                 const currRes = await fetch(`${URL_BASE}weather?zip=${ZIP},US&units=imperial&appid=${API_KEY}`);
                 const current = await currRes.json();
 
-                // 2. Fetch 5-Day Forecast
                 const foreRes = await fetch(`${URL_BASE}forecast?zip=${ZIP},US&units=imperial&appid=${API_KEY}`);
                 const forecastData = await foreRes.json();
 
-                // Filter forecast for midday (12:00:00) entries to get roughly 1 per day
-                const dailyData = forecastData.list.filter(reading => reading.dt_txt.includes("12:00:00"));
+                const dailyData = forecastData.list.filter(reading => reading.dt_txt.includes("12:00:00")).slice(0, 5);
 
-                // Build HTML
                 let forecastHTML = '';
                 dailyData.forEach(day => {
                     const date = new Date(day.dt * 1000);
@@ -146,7 +120,7 @@
                     forecastHTML += `
                         <div class="forecast-day">
                             <div class="forecast-date">${dayName}</div>
-                            <img class="forecast-icon" src="https://openweathermap.org/img/wn/${day.weather[0].icon}.png" alt="icon">
+                            <img class="forecast-icon" src="https://openweathermap.org/img/wn/${day.weather[0].icon}.png">
                             <div class="forecast-temp">${Math.round(day.main.temp)}°</div>
                         </div>
                     `;
@@ -159,17 +133,14 @@
                             <img class="current-icon" src="https://openweathermap.org/img/wn/${current.weather[0].icon}@4x.png">
                             <span class="current-temp">${Math.round(current.main.temp)}°F</span>
                         </div>
-                        <div style="color: var(--text-muted); text-transform: capitalize;">
+                        <div style="color: var(--text-muted); text-transform: capitalize; font-size: 0.9rem;">
                             ${current.weather[0].description} • Humidity: ${current.main.humidity}%
                         </div>
                     </div>
-                    <div class="forecast-grid">
-                        ${forecastHTML}
-                    </div>
+                    <div class="forecast-grid">${forecastHTML}</div>
                 `;
-
             } catch (err) {
-                container.innerHTML = `<div class="loading-text" style="color: red;">Error: Unable to load weather.</div>`;
+                container.innerHTML = `<div class="loading-text" style="color: red;">Error loading weather data.</div>`;
             }
         }
 
