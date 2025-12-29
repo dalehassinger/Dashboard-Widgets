@@ -1,27 +1,3 @@
-<div id="weather-widget" style="padding: 20px; border: 1px solid #ccc; border-radius: 8px; width: 200px;">
-  <h3 id="city">Loading...</h3>
-  <p id="temp">--°C</p>
-  <p id="desc">--</p>
-</div>
-
-<script>
-  const apiKey = '317fe360362bdf24f05415078d919c4b';
-  const city = 'Dillsburg'; // Based on your location
-
-  async function getWeather() {
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`);
-    const data = await response.json();
-    
-    document.getElementById('city').innerText = data.name;
-    document.getElementById('temp').innerText = Math.round(data.main.temp) + '°C';
-    document.getElementById('desc').innerText = data.weather[0].description;
-  }
-
-  getWeather();
-</script>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
