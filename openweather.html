@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dillsburg Weather & Radar</title>
+    <title>Dillsburg Weather - High Res Radar</title>
     <style>
         :root {
             --bg-color: #f0f2f5;
@@ -18,7 +18,7 @@
             background-color: var(--bg-color);
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* Changed to top-aligned for scrolling */
             min-height: 100vh;
             margin: 0;
             padding: 20px;
@@ -27,9 +27,9 @@
         .weather-container {
             background: var(--card-bg);
             border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 700px;
+            max-width: 900px; /* Increased max-width for better radar viewing */
             overflow: hidden;
         }
 
@@ -40,37 +40,38 @@
             border-bottom: 1px solid #edf2f7;
         }
 
-        .city-header { font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin: 0; }
+        .city-header { font-size: 1.8rem; font-weight: 800; color: var(--text-main); margin: 0; }
 
         .current-main {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 25px;
         }
 
-        .current-temp { font-size: 4rem; font-weight: 800; letter-spacing: -3px; }
-        .current-icon { width: 80px; }
+        .current-temp { font-size: 4.5rem; font-weight: 800; letter-spacing: -3px; }
+        .current-icon { width: 90px; }
 
         /* Forecast Section */
         .forecast-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            padding: 1rem;
+            padding: 1.5rem;
             background: #fafbfc;
             border-bottom: 1px solid #edf2f7;
         }
 
-        .forecast-day { text-align: center; padding: 5px; }
-        .forecast-date { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-        .forecast-icon { width: 40px; margin: 2px 0; }
-        .forecast-temp { font-weight: 700; font-size: 1rem; color: var(--text-main); }
+        .forecast-day { text-align: center; padding: 10px; }
+        .forecast-date { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        .forecast-icon { width: 45px; margin: 2px 0; }
+        .forecast-temp { font-weight: 700; font-size: 1.1rem; color: var(--text-main); }
 
-        /* Radar Section */
+        /* ENLARGED RADAR SECTION */
         .radar-section {
             width: 100%;
-            height: 350px;
+            height: 600px; /* Increased from 350px to 600px */
             position: relative;
+            background: #000; /* Dark background looks better while radar loads */
         }
 
         iframe {
@@ -86,12 +87,12 @@
 
     <div class="weather-container">
         <div id="weather-app">
-            <p class="loading-text">Loading Dillsburg forecast...</p>
+            <p class="loading-text">Synchronizing Dillsburg Data...</p>
         </div>
 
         <div class="radar-section">
             <iframe 
-                src="https://www.rainviewer.com/map.html?loc=40.11,-77.03,9&control=1&map=1&refl=1&mra=1&v=1&cm=1&p=1&ao=1&df=1" 
+                src="https://www.rainviewer.com/map.html?loc=40.11,-77.03,10&control=1&map=1&refl=1&mra=1&v=1&cm=1&p=1&ao=1&df=1" 
                 allowfullscreen>
             </iframe>
         </div>
@@ -133,14 +134,14 @@
                             <img class="current-icon" src="https://openweathermap.org/img/wn/${current.weather[0].icon}@4x.png">
                             <span class="current-temp">${Math.round(current.main.temp)}°F</span>
                         </div>
-                        <div style="color: var(--text-muted); text-transform: capitalize; font-size: 0.9rem;">
-                            ${current.weather[0].description} • Humidity: ${current.main.humidity}%
+                        <div style="color: var(--text-muted); text-transform: capitalize; font-size: 1rem;">
+                            ${current.weather[0].description} • Humidity: ${current.main.humidity}% • Feels Like: ${Math.round(current.main.feels_like)}°F
                         </div>
                     </div>
                     <div class="forecast-grid">${forecastHTML}</div>
                 `;
             } catch (err) {
-                container.innerHTML = `<div class="loading-text" style="color: red;">Error loading weather data.</div>`;
+                container.innerHTML = `<div class="loading-text" style="color: red;">Error: Service temporarily unavailable.</div>`;
             }
         }
 
