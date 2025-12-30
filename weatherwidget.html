@@ -3,53 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dillsburg Weather Widget</title>
+    <title>Dillsburg Weather Dashboard</title>
     <style>
-        /* Modern styling to frame the widget */
-        body {
-            margin: 0;
-            padding: 40px 20px;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
+        /* Force the page to occupy full width and height with zero gaps */
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: #2d4c73; /* Matches the dark blue in your image */
+            overflow-x: hidden; /* Prevents horizontal scrolling */
         }
 
-        .widget-wrapper {
+        /* Container that forces the widget to fill the page */
+        .full-page-widget {
             width: 100%;
-            max-width: 800px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            margin: 0;
+            padding: 0;
         }
 
-        .widget-header {
-            color: white;
-            text-align: center;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 1.2rem;
-            font-weight: 300;
+        /* Overriding any default anchor padding */
+        .weatherwidget-io {
+            display: block !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
         }
     </style>
 </head>
 <body>
 
-    <div class="widget-wrapper">
-        <div class="widget-header">Current Conditions: Dillsburg, PA</div>
-        
+    <div class="full-page-widget">
         <a class="weatherwidget-io" 
            href="https://forecast7.com/en/40d09n77d03/17019/?unit=us" 
            data-label_1="DILLSBURG" 
            data-label_2="WEATHER" 
-           data-theme="original">DILLSBURG WEATHER</a>
-        
-        <script>
+           data-font="Roboto" 
+           data-icons="Climacons Animated" 
+           data-days="7" 
+           data-theme="flat" 
+           data-basecolor="#2d4c73" 
+           data-accent="rgba(255, 255, 255, 0.1)" 
+           data-textcolor="#ffffff" 
+           data-highcolor="#f4a460" 
+           data-lowcolor="#87ceeb">DILLSBURG WEATHER</a>
+    </div>
+
+    <script>
+        /* This script handles the rendering. 
+           If viewing locally, ensure you are connected to the internet.
+        */
         !function(d,s,id){
             var js,fjs=d.getElementsByTagName(s)[0];
             if(!d.getElementById(id)){
@@ -57,10 +60,11 @@
                 js.id=id;
                 js.src='https://weatherwidget.io/js/widget.min.js';
                 fjs.parentNode.insertBefore(js,fjs);
+            } else {
+                if (window.__weatherwidget_init) window.__weatherwidget_init();
             }
         }(document,'script','weatherwidget-io-js');
-        </script>
-        </div>
+    </script>
 
 </body>
 </html>
