@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dillsburg Weather Widget</title>
+    <style>
+        /* Modern styling to frame the widget */
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .widget-wrapper {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .widget-header {
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="widget-wrapper">
+        <div class="widget-header">Current Conditions: Dillsburg, PA</div>
+        
+        <a class="weatherwidget-io" 
+           href="https://forecast7.com/en/40d09n77d03/17019/?unit=us" 
+           data-label_1="DILLSBURG" 
+           data-label_2="WEATHER" 
+           data-theme="original">DILLSBURG WEATHER</a>
+        
+        <script>
+        !function(d,s,id){
+            var js,fjs=d.getElementsByTagName(s)[0];
+            if(!d.getElementById(id)){
+                js=d.createElement(s);
+                js.id=id;
+                js.src='https://weatherwidget.io/js/widget.min.js';
+                fjs.parentNode.insertBefore(js,fjs);
+            }
+        }(document,'script','weatherwidget-io-js');
+        </script>
+        </div>
+
+</body>
+</html>
